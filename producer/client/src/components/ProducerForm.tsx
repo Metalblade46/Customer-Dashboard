@@ -38,7 +38,7 @@ const ProducerForm = () => {
         axios.post('/api/produce',values).then(()=>{
           toast({
             title: 'Success',
-            description: 'Data sent successfully!',
+            description: `Data sent for store ${values.storeId} successfully!`,
             duration: 2000,
           })
         });
