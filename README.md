@@ -9,7 +9,7 @@ This project helps to keep track of customers entering and leaving the stores an
 Clone the project
 
 ```bash
-  git clone https://link-to-project
+  git clone https://github.com/Metalblade46/Customer-Dashboard.git
 ```
 
 Go to the docker-compose directory
