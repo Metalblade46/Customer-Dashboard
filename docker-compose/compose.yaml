@@ -1,0 +1,74 @@
+version: '3.8'
+services:
+  zookeeper:
+    image: zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka
+    ports:
+      - "9092:9092"
+    environment:
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.29.246:9092
+      - KAFKA_ZOOKEEPER_CONNECT=192.168.29.246:2181
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - zookeeper
+  mongo:
+    container_name: mongo
+    image: mongo
+    restart: always
+    # environment:
+      # - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
+      # - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
+    volumes:
+    - mongo-data:/data/db
+    ports:
+      - 27017:27017
+  producer:
+    build: ../producer/client
+    container_name: producer
+    restart: always
+    command: npm run dev
+    depends_on:
+      - kafka
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=${KAFKA_BOOTSTRAP_SERVERS}
+    volumes:
+      - ../producer/client:/app
+    ports:
+      - "4000:4000"
+  consumer:
+    build: ../consumer/server
+    container_name: consumer
+    restart: always
+    command: npm run dev
+    ports:
+      - 5000:5000
+    volumes:
+      - ../consumer/server/:/app
+    depends_on:
+      - kafka
+      - mongo   
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=$KAFKA_BOOTSTRAP_SERVERS
+      - MONGO_URL=mongodb://mongo:27017/$MONGODB_DATABASE
+  dashboard:
+    build: ../consumer/client
+    container_name: dashboard
+    command: npm run dev
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ../consumer/client:/app/
+    depends_on:
+      - consumer
+      - zookeeper
+      - kafka
+      - mongo
+volumes:
+    mongo-data: {}
