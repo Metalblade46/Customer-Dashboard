@@ -14,7 +14,7 @@ import { ScrollArea } from "./ui/scroll-area";
 const LiveTable = ({ type, data }: { type: string; data: Message[] }) => {
   return (
     <div className="w-1/2 mt-6 shadow-gray-300 shadow-sm rounded-sm p-4">
-      <h2 className="font-semibold text-center mb-4">{type} Table for {`${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()}`}</h2>
+      <h2 className="font-semibold text-center mb-4">{type} Table for Today</h2>
           
       <ScrollArea className=" h-[200px] rounded-md ">   
       <Table>

@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {useForm} from 'react-hook-form';
 import {z} from 'zod';
 import { Button } from "@/components/ui/button"
+import { useToast } from "@/hooks/use-toast";
 import {
   Form,
   FormControl,
@@ -31,9 +32,16 @@ const ProducerForm = () => {
         //   storeId: 1,
         // },
       })
+      const { toast } = useToast()
       const onSubmit=(values: z.infer<typeof schema>)=>{
         // console.log(values);
-        axios.post('/api/produce',values).then(console.log);
+        axios.post('/api/produce',values).then(()=>{
+          toast({
+            title: 'Success',
+            description: 'Data sent successfully!',
+            duration: 2000,
+          })
+        });
       }
       return (
         <Form {...form}>
