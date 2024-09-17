@@ -1,3 +1,4 @@
+import convertToIST from "@/lib/time";
 import { Kafka } from "kafkajs";
 
 const produce = async (data: {
@@ -27,7 +28,7 @@ const produce = async (data: {
     }
     const producer = kafka.producer();
     await producer.connect();
-    const date = new Date();
+    const date = convertToIST(new Date(),5,30);
     const getTimeStamp = () => {
         const hours = date.getHours();
         const minutes = date.getMinutes();
